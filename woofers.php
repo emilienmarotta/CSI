@@ -1,15 +1,16 @@
 <?php
-    require_once("config/database.php"); // On importe la BDD
+   require_once("config/database.php"); // Connexion à la BDD
 
-    session_start(); // Permet d'utiliser les variables de session
-    
-    if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) { // On vérifie si l'utilisateur est connecté
-        header("Location: login.php");
-        exit();
-    }    
+   session_start(); // Permet d'utiliser les variables de session
+   
+   if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) { // On vérifie si l'utilisateur est connecté
+       header("Location: login.php"); // Si non, on le redirige vers le Login
+       exit();
+   }    
 ?>
 
 <?php
+// Ajouter un woofer
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
     // On récupère les données du formulaire
     $nom = mysqli_real_escape_string($conn, $_POST['nom']);
@@ -22,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
     $dateFin = mysqli_real_escape_string($conn, $_POST['dateFin']);
     
     // On récupère la date du jour 
-
     $dateCreation = $dateDuJour = date("Y-m-d");
 
     // Requête d'insertion des données pour la table Utilisateur
@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
     mysqli_query($conn, $sqlUtilisateur);
         
     // Récupération de l'id de l'utilisateur pour pouvoir l'utiliser dans la requête de création du woofer
-
     $sqlGetIdCompte = "SELECT idCompte FROM Utilisateur WHERE nomUtilisateur='$nomUtilisateur'";
     $result = mysqli_query($conn, $sqlGetIdCompte);
     $utilisateur = $result->fetch_assoc();
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <?php include_once("menu.php") ?>
+    <?php include_once("menu.php") ?> <!-- Intégration du menu -->
     <h2>Gestion des woofers</h2>
     <p>Accès <?php echo $_SESSION["typeUtilisateur"]?></p>
     <div>
@@ -72,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
             </thead>
             <tbody>
                 <?php
+                // Requête pour récupérer les woofers connectés
                 $sql = "SELECT w.nom, w.prenom, u.nomUtilisateur, u.email FROM Woofer w JOIN Utilisateur u ON w.idCompte = u.idCompte WHERE u.etat = 'connecte'";
                 $result = mysqli_query($conn, $sql);
                 while($woofer = $result->fetch_assoc()) {
@@ -125,12 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
         </thead>
         <tbody>
             <?php
-            // Connexion à la base de données
-            require_once("config/database.php");
 
             // Récupération des paramètres de recherche et tri
             $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'nomUtilisateur'; // Tri par défaut
+            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'nomUtilisateur'; // Trié par défaut par rapport au nom d'utilisateur
 
             // Requête SQL pour récupérer les woofers avec filtre de recherche
             $sql = "SELECT u.idCompte, u.nomUtilisateur, u.email, u.etat AS etatUtilisateur, u.derniereConnexion,
@@ -165,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterWoofer'])) {
     </table>
     </div>
     <div>
-    <h3>Ajouter un woofer</h3>
+    <h3>Ajouter un woofer</h3> <!-- Seuls les responsables ont la possibilité d'ajouter des woofers -->
     <?php
         if ($_SESSION["typeUtilisateur"] !== "Responsable") {
             echo "<p>Fonctionnalité réservée aux responsables.</p>";

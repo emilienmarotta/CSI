@@ -1,12 +1,12 @@
 <?php
-    require_once("config/database.php"); // On importe la BDD
+   require_once("config/database.php"); // Connexion à la BDD
 
-    session_start(); // Permet d'utiliser les variables de session
-    
-    if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) { // On vérifie si l'utilisateur est connecté
-        header("Location: login.php");
-        exit();
-    }    
+   session_start(); // Permet d'utiliser les variables de session
+   
+   if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) { // On vérifie si l'utilisateur est connecté
+       header("Location: login.php"); // Si non, on le redirige vers le Login
+       exit();
+   }    
 ?>
 
 <?php
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/index.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script> // Script pour pouvoir modifier des valeurs en double-cliquant sur un élément puis en cliquant à côté pour pouvoir enregistrer la modification dans la BDD
+    <script> // On veut pouvoir modifier les valeurs en double-cliquant sur un élément puis en cliquant à côté pour pouvoir enregistrer la modification dans la BDD
     $(document).ready(function() { // On attend que la page soit chargée
         $(".editable").dblclick(function() { // On détecte ici le double-clic
             let elementActuel = $(this); // this = élément double-cliqué
@@ -90,25 +90,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
         <thead>
             <tr>
                 <th>Total Ateliers</th>
-                <th>Participants Moyens par Type</th>
-                <th>Ateliers par État</th>
+                <th>Nombre d'ateliers par état</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            // Récupérer les statistiques
+            // On récupère le nombre total d'ateliers
             $sqlTotalAteliers = "SELECT COUNT(*) as total FROM Atelier";
             $resultTotal = mysqli_query($conn, $sqlTotalAteliers);
             $totalAteliers = mysqli_fetch_assoc($resultTotal)['total'];
 
-            $sqlParticipantsMoyens = "SELECT theme, AVG(nbMaxParticipants) as moyenne FROM Atelier GROUP BY theme";
-            $resultMoyenne = mysqli_query($conn, $sqlParticipantsMoyens);
-            $moyenneParticipants = [];
-            while ($row = mysqli_fetch_assoc($resultMoyenne)) {
-                $moyenneParticipants[] = "{$row['theme']}: " . round($row['moyenne'], 2);
-            }
-            $moyenneParticipantsStr = implode('<br>', $moyenneParticipants);
-
+            // On récupère le nombre d'ateliers de chaque état pour chaque type d'atelier
             $sqlAteliersParEtat = "SELECT etat, COUNT(*) as total FROM Atelier GROUP BY etat";
             $resultEtat = mysqli_query($conn, $sqlAteliersParEtat);
             $etatStats = [];
@@ -119,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
             
             echo "<tr>
                     <td>{$totalAteliers}</td>
-                    <td>{$moyenneParticipantsStr}</td>
                     <td>{$etatStatsStr}</td>
                   </tr>";
             ?>
@@ -160,14 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
         </thead>
         <tbody>
             <?php
-            // Connexion à la base de données
-            require_once("config/database.php");
-
-            // Récupération des paramètres de recherche et tri
+            // On récupère les paramètres de recherche et tri
             $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
             $sort = isset($_GET['sort']) ? $_GET['sort'] : 'theme'; // Tri par défaut
 
-            // Requête SQL pour récupérer les ateliers avec recherche et tri
+            // On récupère les ateliers avec les paramètres de recherche et de tri
             $sql = "SELECT a.noAtelier, a.theme, a.nbMaxParticipants, a.etat, a.prix, a.date, u.nomUtilisateur AS wooferResponsable
                     FROM Atelier a
                     LEFT JOIN Woofer w ON a.woofer = w.idCompte
@@ -196,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
     </table>
     </div>
     <div>
-    <h3>Ajouter un atelier</h3>
+    <h3>Ajouter un atelier</h3> <!-- Seuls les responsables peuvent ajouter un atelier -->
     <?php
         if ($_SESSION["typeUtilisateur"] !== "Responsable") {
             echo "<p>Fonctionnalité réservée aux responsables.</p>";
@@ -208,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
         <select name="theme" id="theme" required>
             <option value="">-- Sélectionner un thème --</option>
             <?php
-            // On récupère la liste des thèmes
+            // On récupère la liste des thèmes des ateliers
             $sqlTheme = "SELECT noAtelier, theme FROM Atelier";
             $resultTheme = mysqli_query($conn, $sqlTheme);
             while ($atelier = mysqli_fetch_assoc($resultTheme)) {
@@ -234,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouterAtelier'])) {
         <select name="woofer" id="woofer" required>
             <option value="">-- Sélectionner un woofer --</option>
             <?php
-            // On récupère la liste des thèmes
+            // On récupère les woofers
             $sqlWoofer = "SELECT w.idCompte, u.nomUtilisateur FROM Woofer w JOIN Utilisateur u ON u.idCompte = w.idCompte";
             $resultWoofer = mysqli_query($conn, $sqlWoofer);
             while ($woofer = mysqli_fetch_assoc($resultWoofer)) {

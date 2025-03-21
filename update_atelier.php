@@ -1,19 +1,20 @@
 <?php
-session_start();
+session_start(); // Permet d'utiliser les variables de session
 
-require_once("config/database.php");
+require_once("config/database.php"); // Connexion à la BDD
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = mysqli_real_escape_string($conn, $_POST["id"]);
-    $column = mysqli_real_escape_string($conn, $_POST["column"]);
+    $col = mysqli_real_escape_string($conn, $_POST["column"]);
     $value = mysqli_real_escape_string($conn, $_POST["value"]);
 
-    $sql = "UPDATE Atelier SET $column = '$value' WHERE noAtelier = '$id'";
+    // On met à jour l'atelier
+    $sql = "UPDATE Atelier SET $col = '$value' WHERE noAtelier = '$id'";
 
     if (mysqli_query($conn, $sql)) {
-        echo "success";
+        echo "L'exécution a réussi";
     } else {
-        echo "error";
+        echo "L'exécution a échoué";
     }
 }
 ?>

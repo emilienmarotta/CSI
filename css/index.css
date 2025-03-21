@@ -90,3 +90,26 @@ button[type="submit"] {
 .instruction {
   padding-top: 20px;
 }
+
+#welcome {
+  text-align: center;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#big-box-tdb {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+}
+
+#form-nouvelle-vente {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

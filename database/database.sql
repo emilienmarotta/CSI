@@ -1,6 +1,6 @@
 -- Création de la base de données
 
-DROP DATABASE farm_db;
+DROP DATABASE IF EXISTS farm_db;
 
 CREATE DATABASE farm_db;
 USE farm_db;
@@ -147,10 +147,10 @@ INSERT INTO Utilisateur (nomUtilisateur, motDePasse, email, typeUtilisateur, dat
 ('dperez', 'strongpass567', 'dperez@email.com', 'Woofer', '2025-01-01', 'deconnecte', '2025-01-01');
 
 INSERT INTO Woofer (idCompte, nom, prenom, diplomes, etat, dateDebut, dateFin, photo) VALUES
-(1, 'Dupont', 'Jean', 'Bac+2 en agriculture', 'inscrit', '2022-02-01', '2024-02-01', 'photo1.jpg'),
-(3, 'Walker', 'Alan', 'Certificat en élevage', 'inscrit', '2023-05-01', '2024-05-01', 'photo3.jpg'),
-(4, 'Thomson', 'Bety', 'BTS en agroalimentaire', 'finMission', '2022-06-01', '2024-06-01', 'photo4.jpg'),
-(6, 'Perez', 'Dom', 'Licence en élevage équin', 'finMission', '2021-08-10', '2024-08-10', 'photo5.jpg');
+(1, 'Dupont', 'Jean', 'Bac+2 en agriculture', 'inscrit', '2022-02-01', '2026-02-01', 'photo1.jpg'),
+(3, 'Walker', 'Alan', 'Certificat en élevage', 'inscrit', '2023-05-01', '2026-05-01', 'photo3.jpg'),
+(4, 'Thomson', 'Bety', 'BTS en agroalimentaire', 'finMission', '2022-06-01', '2026-06-01', 'photo4.jpg'),
+(6, 'Perez', 'Dom', 'Licence en élevage équin', 'finMission', '2021-08-10', '2026-08-10', 'photo5.jpg');
 
 INSERT INTO Responsable (idCompte, droitsAdmin) VALUES
 (2, TRUE),
@@ -172,26 +172,25 @@ INSERT INTO Produit (nom, quantite, photo, etat, prixUnitaire, typeProduit) VALU
 ('Fromage de brebis', 15, 'fromage_brebis.jpg', 'misEnVente', 6.0, 4);
 
 INSERT INTO Vente (idnoVente, date, prixTTC, prixHT, woofer, etat) VALUES
-('V001', '2025-03-01', 25.0, 27.0, 1, 'payee'),
-('V002', '2025-03-05', 45.0, 47.0, 4, 'payee'),
-('V003', '2025-03-10', 100.0, 102.0, 6, 'payee'),
-('V004', '2025-02-8', 100.0, 102.0, 4, 'payee'),
-('V005', '2024-03-7', 100.0, 102.0, 4, 'payee');
+('V67dd6953c5a71', '2025-03-01', 30.0, 25.0, 1, 'payee'),
+('V67dd6a8ac99d9', '2025-03-05', 54.0, 45.0, 4, 'payee'),
+('V67d9d512aa78c', '2025-03-10', 120.0, 100.0, 6, 'payee'),
+('V67dd6982120a2', '2025-02-8', 120.0, 100.0, 4, 'payee'),
+('V67dd6712c6197', '2024-03-7', 51.0, 42.5, 4, 'payee');
 
 INSERT INTO Vente_Produit (idnoVente, noProduit, quantite) VALUES
-('V001', 1, 10),
-('V001', 2, 2),
-('V002', 3, 1),
-('V003', 6, 20),
-('V004', 3, 6),
-('V005', 1, 5);
+('V67dd6953c5a71', 1, 10),
+('V67dd6953c5a71', 2, 2),
+('V67d9d512aa78c', 3, 1),
+('V67dd6712c6197', 6, 20),
+('V67dd6712c6197', 3, 6);
 
 INSERT INTO Facture (refFacture, prix, etat, vente) VALUES
-('F001', 25.0, 'payee', 'V001'),
-('F002', 48.0, 'payee', 'V002'),
-('F003', 105.0, 'archivee', 'V003'),
-('F004', 105.0, 'archivee', 'V004'),
-('F005', 105.0, 'payee', 'V005');
+('F67dd6953c5a71', 30.0, 'payee', 'V67dd6953c5a71'),
+('F67dd6a8ac99d9', 54.0, 'payee', 'V67dd6a8ac99d9'),
+('F67d9d512aa78c', 120.0, 'archivee', 'V67d9d512aa78c'),
+('F67dd6982120a2', 120.0, 'archivee', 'V67dd6982120a2'),
+('F67dd6712c6197', 51.0, 'payee', 'V67dd6712c6197');
 
 INSERT INTO Client (numTel, etat, email) VALUES
 ('0612345678', 'desinscrit', 'client1@mail.com'),
@@ -199,9 +198,12 @@ INSERT INTO Client (numTel, etat, email) VALUES
 ('0623445677', 'inscrit', 'client3@mail.fr');
 
 INSERT INTO Atelier (theme, nbMaxParticipants, etat, prix, date, woofer) VALUES
-('fabricationFromage', 10, 'cree', 20.0, '2024-04-15', 1),
-('cultureBiologique', 12, 'cree', 25.0, '2024-04-20', 4),
-('decouverteSoinsAnimaux', 8, 'annule', 30.0, '2024-04-25', 6);
+('fabricationFromage', 10, 'cree', 20.0, '2025-04-15', 1),
+('cultureBiologique', 12, 'cree', 25.0, '2025-04-20', 4),
+('cultureBiologique', 2, 'cree', 50.0, '2025-04-21', 4),
+('fabricationFromage', 5, 'cree', 10.0, '2025-05-21', 6),
+('fabricationFromage', 5, 'cree', 10.0, '2025-06-21', 6),
+('decouverteSoinsAnimaux', 8, 'annule', 30.0, '2025-04-25', 6);
 
 INSERT INTO Participe (idAtelier, idClient) VALUES
 (1, 1),
