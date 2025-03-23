@@ -1,0 +1,115 @@
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 100px;
+}
+
+* {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+h3 {
+  text-decoration: underline;
+  text-align: center;
+}
+
+table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  font-size: 16px;
+}
+
+th {
+  background-color: #d1f1d2;
+  color: black;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #e9e9e9;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+tr:first-child td:first-child {
+  border-top-left-radius: 8px;
+}
+tr:first-child td:last-child {
+  border-top-right-radius: 8px;
+}
+tr:last-child td:first-child {
+  border-bottom-left-radius: 8px;
+}
+tr:last-child td:last-child {
+  border-bottom-right-radius: 8px;
+}
+
+.rechercheAvancee {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button[type="submit"] {
+  margin-top: 20px;
+}
+
+.editable {
+  color: #535fc9;
+  cursor: pointer;
+}
+
+.editable:hover {
+  background-color: #dbdbdb;
+}
+
+.instruction {
+  padding-top: 20px;
+}
+
+#welcome {
+  text-align: center;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#big-box-tdb {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+}
+
+#form-nouvelle-vente {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
